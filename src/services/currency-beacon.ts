@@ -44,6 +44,7 @@ export interface ConvertResponse {
 export class CurrencyBeacon {
   httpClient = inject(HttpClient);
   root = 'https://api.currencybeacon.com/v1';
+  //Replace `key` with your API auth key from Currency Beacon
   key = 'fake-auth-key';
 
   getCurrencies(): Observable<CurrencyResponse> {

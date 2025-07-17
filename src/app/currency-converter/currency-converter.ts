@@ -1,5 +1,4 @@
 import { Component, inject } from '@angular/core';
-import { v4 as uuidv4 } from 'uuid';
 import { CurrencyBeacon } from '../../services/currency-beacon';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
@@ -16,27 +15,22 @@ import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
       display: flex;
       flex-direction: column;
       gap: 10px;
-      max-width: 500px;
-    }
-
-    .c-currency-converter__from {
-    }
-    .c-currency-converter__to {
     }
   `,
   template: `
     <form [formGroup]="form" class="c-currency-converter">
       <div class="c-currency-converter__from">
         <h2>From</h2>
-        <select [id]="selectLeftId" formControlName="leftSelect">
+        <select formControlName="leftSelect" aria-label="From currency">
           @for (currency of currenciesResponse()?.response; track currency.id) {
             <option>{{ currency.short_code }}</option>
           }
         </select>
-
-        <label [for]="inputLeftId" [hidden]="true">Amount</label>
-        <input [id]="inputLeftId" [formControl]="form.controls.leftInput" />
-        <label [for]="selectLeftId" [hidden]="true">Currency</label>
+        <input
+          type="number"
+          aria-label="From amount"
+          [formControl]="form.controls.leftInput"
+        />
         <p>
           {{
             asString(
@@ -49,21 +43,25 @@ import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
 
       <div class="c-currency-converter__to">
         <h2>To</h2>
-        <label [for]="selectRightId" [hidden]="true">Currency</label>
-        <select [id]="selectRightId" formControlName="rightSelect">
+        <select formControlName="rightSelect" aria-label="To currency">
           @for (currency of currenciesResponse()?.response; track currency.id) {
             <option>{{ currency.short_code }}</option>
           }
         </select>
-
-        <label [for]="inputRightId" [hidden]="true">Amount</label>
         <input
-          [id]="inputRightId"
           formControlName="rightInput"
           [readonly]="true"
+          aria-label="To amount"
         />
       </div>
-      <p></p>
+      <p>
+        {{
+          asString(
+            form.controls.rightInput.value,
+            form.controls.rightSelect.value
+          )
+        }}
+      </p>
     </form>
   `,
 })
@@ -77,11 +75,6 @@ export class CurrencyConverter {
     rightSelect: new FormControl<string>(''),
     rightInput: new FormControl<string>('100'),
   });
-
-  selectLeftId = uuidv4();
-  selectRightId = uuidv4();
-  inputLeftId = uuidv4();
-  inputRightId = uuidv4();
 
   updateConversion = () => {
     this.currencyBeaconService
@@ -102,7 +95,7 @@ export class CurrencyConverter {
       return currency.short_code === shortCode;
     });
     if (currency) {
-      return `${currency.symbol} ${shortCode}`;
+      return `${currency.symbol}${amount} (${currency.name})`;
     } else {
       return 'No currency selected';
     }
