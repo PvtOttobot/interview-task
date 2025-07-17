@@ -1,0 +1,20 @@
+{
+  "meta": {
+    "code": 200,
+    "disclaimer": "Usage subject to terms: https://currencybeacon.com/terms"
+  },
+  "response": {
+    "timestamp": 1752696636,
+    "date": "2025-07-16",
+    "from": "ALL",
+    "to": "AFN",
+    "amount": 100,
+    "value": 82.271853
+  },
+  "timestamp": 1752696636,
+  "date": "2025-07-16",
+  "from": "ALL",
+  "to": "AFN",
+  "amount": 100,
+  "value": 82.271853
+}
